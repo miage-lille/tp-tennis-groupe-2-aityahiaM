@@ -1,5 +1,7 @@
 import { describe, expect, test } from '@jest/globals';
-import { otherPlayer, playerToString } from '..';
+import { otherPlayer, playerToString, scoreWhenAdvantage, scoreWhenDeuce } from '..';
+import { stringToPlayer } from '../types/player';
+import { advantage, deuce, game } from '../types/score';
 
 describe('Tests for tooling functions', () => {
   test('Given playerOne when playerToString', () => {
@@ -12,24 +14,41 @@ describe('Tests for tooling functions', () => {
 });
 
 describe('Tests for transition functions', () => {
-   test('Given deuce, score is advantage to winner', () => {
-     console.log('To fill when we will know how represent Deuce');
-   });
+  test('Given deuce, score is advantage to winner', () => {
+    ['PLAYER_ONE', 'PLAYER_TWO'].forEach((w) => {
+      const score = scoreWhenDeuce(stringToPlayer(w));
+      const scoreExpected = advantage(stringToPlayer(w));
+      expect(score).toStrictEqual(scoreExpected);
+    })
+  });
+
    test('Given advantage when advantagedPlayer wins, score is Game avantagedPlayer', () => {
-     console.log('To fill when we will know how represent Advantage');
-   });
+    ['PLAYER_ONE', 'PLAYER_TWO'].forEach((advantaged) => {
+      const advantagedPlayer = stringToPlayer(advantaged);
+      const winner = advantagedPlayer;
+      const score = scoreWhenAdvantage(advantagedPlayer, winner);
+      const scoreExpected = game(winner);
+      expect(score).toStrictEqual(scoreExpected);
+    })
+  });
    test('Given advantage when otherPlayer wins, score is Deuce', () => {
-     console.log('To fill when we will know how represent Advantage');
+    ['PLAYER_ONE', 'PLAYER_TWO'].forEach((advantaged) => {
+      const advantagedPlayer = stringToPlayer(advantaged);
+      const winner = otherPlayer(advantagedPlayer);
+      const score = scoreWhenAdvantage(advantagedPlayer, winner);
+      const scoreExpected = deuce();
+      expect(score).toStrictEqual(scoreExpected);
+  })
    });
-   test('Given a player at 40 when the same player wins, score is Game for this player', () => {
-     console.log('To fill when we will know how represent Forty');
-   });
-   test('Given player at 40 and other at 30 when other wins, score is Deuce', () => {
-     console.log('To fill when we will know how represent Forty');
-   });
-   test('Given player at 40 and other at 15 when other wins, score is 40 - 15', () => {
-     console.log('To fill when we will know how represent Forty');
-   });
+  // test('Given a player at 40 when the same player wins, score is Game for this player', () => {
+  //   console.log('To fill when we will know how represent Forty');
+  // });
+  // test('Given player at 40 and other at 30 when other wins, score is Deuce', () => {
+  //   console.log('To fill when we will know how represent Forty');
+  // });
+  // test('Given player at 40 and other at 15 when other wins, score is 40 - 15', () => {
+  //   console.log('To fill when we will know how represent Forty');
+  // });
   // -------------------------TESTS POINTS-------------------------- //
   // test('Given players at 0 or 15 points score kind is still POINTS', () => {
   //   throw new Error(
