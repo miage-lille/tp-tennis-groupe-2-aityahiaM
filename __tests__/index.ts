@@ -1,5 +1,5 @@
 import { describe, expect, test } from '@jest/globals';
-import { otherPlayer, playerToString, scoreWhenAdvantage, scoreWhenDeuce, scoreWhenForty } from '..';
+import { otherPlayer, playerToString, scoreWhenAdvantage, scoreWhenDeuce, scoreWhenForty, scoreWhenPoint } from '..';
 import { stringToPlayer } from '../types/player';
 import { advantage, deuce, forty, game, stringToPoint, thirty } from '../types/score';
 
@@ -74,15 +74,23 @@ describe('Tests for transition functions', () => {
     })
    });
   // -------------------------TESTS POINTS-------------------------- //
-  // test('Given players at 0 or 15 points score kind is still POINTS', () => {
-  //   throw new Error(
-  //     'Your turn to code the preconditions, expected result and test.'
-  //   );
-  // });
+   test('Given players at 0 or 15 points score kind is still POINTS', () => {
+    const current = {
+      PLAYER_ONE: stringToPoint('LOVE'),
+      PLAYER_TWO: stringToPoint('FIFTEEN'),
+    };
+    const score = scoreWhenPoint(current, 'PLAYER_ONE');
+    expect(score.kind).toStrictEqual('POINTS');
+   });
 
-  // test('Given one player at 30 and win, score kind is forty', () => {
-  //   throw new Error(
-  //     'Your turn to code the preconditions, expected result and test.'
-  //   );
-  // });
+   test('Given one player at 30 and win, score kind is forty', () => {
+    const current = {
+      PLAYER_ONE: stringToPoint('THIRTY'),
+      PLAYER_TWO: stringToPoint('FIFTEEN'),
+    };
+    const score = scoreWhenPoint(current, 'PLAYER_ONE');
+    expect(score).toStrictEqual(
+      forty('PLAYER_ONE', stringToPoint('FIFTEEN'))
+    );
+   });
 });
