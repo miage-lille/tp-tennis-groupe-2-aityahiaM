@@ -1,5 +1,5 @@
 import { isSamePlayer, Player, stringToPlayer } from './types/player';
-import { deuce, fifteen, forty, FortyData, Point, points, PointsData, Score, thirty } from './types/score';
+import { deuce, fifteen, forty, FortyData, love, Point, points, PointsData, Score, thirty } from './types/score';
 import { advantage } from './types/score';
 import { game } from './types/score';
 import { pipe, Option } from 'effect'
@@ -36,8 +36,7 @@ export const pointToString = (point: Point): string => {
   }
 };
 
-export const scoreToString = (score: Score): string =>
-  (() => {
+export const scoreToString = (score: Score): string =>{
     switch (score.kind) {
       case 'POINTS': {
         const p = score.pointsData;
@@ -59,7 +58,7 @@ export const scoreToString = (score: Score): string =>
       default:
         throw new Error('Unknown score kind');
     }
-  })();
+  };
 
 export const scoreWhenDeuce = (winner: Player): Score => advantage(winner);
 
@@ -122,9 +121,28 @@ export const scoreWhenPoint = (current: PointsData, winner: Player): Score => {
 
 // Exercice 3
 export const scoreWhenGame = (winner: Player): Score => {
-  throw new Error('not implemented');
+  return game(winner);
 };
 
 export const score = (currentScore: Score, winner: Player): Score => {
-  throw new Error('not implemented');
+  switch (currentScore.kind) {
+    case 'POINTS':
+      return scoreWhenPoint(currentScore.pointsData, winner);
+
+    case 'FORTY':
+      return scoreWhenForty(
+        { player: currentScore.player, otherPoint: currentScore.otherPoint },
+        winner
+      );
+
+    case 'DEUCE':
+      return scoreWhenDeuce(winner);
+
+    case 'ADVANTAGE':
+      return scoreWhenAdvantage(currentScore.player, winner);
+
+    case 'GAME':
+      return scoreWhenGame(currentScore.player);
+  }
 };
+const newGame: Score = points(love(), love());
